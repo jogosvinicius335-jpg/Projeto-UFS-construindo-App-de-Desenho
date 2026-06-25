@@ -7,15 +7,15 @@ import tkinter as tk
 def iniciar_figura_nova(event): 
     global figura_nova
     if tipo_figura_var.get() == 'Linha':
-        figura_nova = ("Linha", (event.x, event.y, event.x, event.y))
+        figura_nova = ("Linha", (event.x, event.y, event.x, event.y), cor_borda.get())
     elif tipo_figura_var.get() == 'Oval':
-        figura_nova = ("Oval", (event.x, event.y, event.x, event.y))
+        figura_nova = ("Oval", (event.x, event.y, event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
     elif tipo_figura_var.get() == 'Retangulo':
-         figura_nova = ("Retangulo", (event.x, event.y, event.x, event.y))
-    elif tipo_figura_var.get() == 'Circulo': ###
-        figura_nova = ("Circulo", (event.x, event.y, event.x, event.y))####
+         figura_nova = ("Retangulo", (event.x, event.y, event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
+    elif tipo_figura_var.get() == 'Circulo':
+        figura_nova = ("Circulo", (event.x, event.y, event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
     else:
-        figura_nova = ("Rabisco", [(event.x, event.y)])
+        figura_nova = ("Rabisco", [(event.x, event.y)], cor_borda.get())
 
 # Quando mouse é movido com o botão pressionado
 def atualizar_figura_nova(event):
@@ -26,13 +26,13 @@ def atualizar_figura_nova(event):
     if figura_nova[0] == "Rabisco":
         figura_nova[1].append((event.x, event.y))
     elif figura_nova[0] == "Linha": 
-        figura_nova = ("Linha", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+        figura_nova = ("Linha", (figura_nova[1][0], figura_nova[1][1], event.x, event.y), cor_borda.get())
     elif figura_nova[0] == "Retangulo":
-        figura_nova = ('Retangulo', (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+        figura_nova = ('Retangulo', (figura_nova[1][0], figura_nova[1][1], event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
     elif figura_nova[0] == "Oval":
-        figura_nova = ("Oval", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+        figura_nova = ("Oval", (figura_nova[1][0], figura_nova[1][1], event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
     elif figura_nova[0] == "Circulo":
-        figura_nova = ("Circulo", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+        figura_nova = ("Circulo", (figura_nova[1][0], figura_nova[1][1], event.x, event.y), (cor_borda.get(), cor_preenchimento.get()))
     
     desenhar_figuras()
     desenhar_figura_nova()
@@ -48,13 +48,13 @@ def incluir_figura_nova(event):
 
 def desenhar_figuras():
     canvas.delete("all")
-    for fig, values in figuras:
+    for fig, values, cor in figuras:
         if fig == "Linha":
-            canvas.create_line(values[0], values[1], values[2], values[3], fill=cor_preenchimento.get())
+            canvas.create_line(values[0], values[1], values[2], values[3], fill=cor)
         elif fig == "Oval":
-            canvas.create_oval(values[0], values[1], values[2], values[3], outline=cor_borda.get(), fill=cor_preenchimento.get())
+            canvas.create_oval(values[0], values[1], values[2], values[3], outline=cor[0], fill=cor[1])
         elif fig == "Retangulo":
-            canvas.create_rectangle(values[0], values[1], values[2], values[3], outline=cor_borda.get(), fill=cor_preenchimento.get())
+            canvas.create_rectangle(values[0], values[1], values[2], values[3], outline=cor[0], fill=cor[1])
         elif fig == "Circulo":
             x1, y1, x2, y2 = values
             x1, x2 = min(x1, x2), max(x1, x2)
@@ -65,20 +65,20 @@ def desenhar_figuras():
             centrox = (x1 + x2) // 2
             centroy = (y1 + y2) // 2
             raio = lado // 2
-            canvas.create_oval(centrox - raio, centroy - raio, centrox + raio, centroy + raio, outline = "black") #fórmula do circ. 
+            canvas.create_oval(centrox - raio, centroy - raio, centrox + raio, centroy + raio, outline=cor[0], fill=cor[1]) #fórmula do circ. 
         else: # fig == "rabisco"
-            canvas.create_line(values, fill=cor_preenchimento.get())
+            canvas.create_line(values, fill=cor)
 
 def desenhar_figura_nova():
     if not figura_nova:
         return
-    fig, values = figura_nova
+    fig, values, cor = figura_nova
     if fig == "Linha":
-        canvas.create_line(values[0], values[1], values[2], values[3], dash=(4, 2), fill=cor_preenchimento.get())
+        canvas.create_line(values[0], values[1], values[2], values[3], dash=(4, 2), fill=cor)
     elif fig == "Oval":
-        canvas.create_oval(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor_borda.get(), fill=cor_preenchimento.get())
+        canvas.create_oval(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor[0], fill=cor[1])
     elif fig == "Retangulo":
-            canvas.create_rectangle(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor_borda.get(), fill=cor_preenchimento.get())
+            canvas.create_rectangle(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor[0], fill=cor[1])
     elif fig == "Circulo":
         x1, y1, x2, y2 = values
         x1, x2 = min(x1, x2), max(x1, x2)
@@ -90,12 +90,12 @@ def desenhar_figura_nova():
         centroy = (y1 + y2) // 2
         raio = lado // 2
         canvas.create_oval(centrox - raio, centroy - raio, centrox + raio, centroy + raio,
-                       dash=(4, 2), outline="black")
+                       dash=(4, 2), outline=cor[0], fill=cor[1])
     else: # fig == "rabisco"
-        canvas.create_line(values, dash=(4, 2), fill=cor_preenchimento.get())
+        canvas.create_line(values, dash=(4, 2), fill=cor)
 
 def incompleta(figura):
-    fig, values = figura
+    fig, values, _ = figura
     if fig in ["Linha", "Oval", "Circulo"]:
         return (values[0], values[1]) == (values[2], values[3])
     elif fig == "Rabisco":
@@ -131,12 +131,12 @@ label.grid(column=0, row=0, sticky=E, **paddings, rowspan=2)
 
 # option menu
 tipo_figura_var = StringVar(root)
-option_menu = ttk.OptionMenu(frame, tipo_figura_var, 'Linha', 'Rabisco', 'Retangulo', 'Circulo', 'Oval')
+option_menu = ttk.OptionMenu(frame, tipo_figura_var, 'Linha', 'Linha', 'Rabisco', 'Retangulo', 'Circulo', 'Oval')
 option_menu.grid(column=1, row=0, sticky=W, **paddings, rowspan=2)
 
 # menu de cores
 cor_borda = StringVar(root, value='#000000')
-cor_preenchimento = StringVar(root, value='#000000')
+cor_preenchimento = StringVar(root)
 
 
 label_cor_borda = tk.Label(frame, text='Cor da borda: ')
