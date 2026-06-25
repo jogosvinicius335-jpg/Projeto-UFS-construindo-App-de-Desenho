@@ -6,6 +6,8 @@ def iniciar_figura_nova(event):
     global figura_nova
     if tipo_figura_var.get() == 'Linha':
         figura_nova = ("linha", (event.x, event.y, event.x, event.y))
+    elif tipo_figura_var.get() == 'oval':
+        figura_nova = ("oval", (event.x, event.y, event.x, event.y))
     else:
         figura_nova = ("rabisco", [(event.x, event.y)])
 
@@ -17,8 +19,8 @@ def atualizar_figura_nova(event):
         
     if figura_nova[0] == "rabisco":
         figura_nova[1].append((event.x, event.y))
-    else: # figura_nova[0] == "linha"
-        figura_nova = ("linha", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+    else: # linha ou oval
+            figura_nova = (figura_nova[0], (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
     
     desenhar_figuras()
     desenhar_figura_nova()
@@ -37,6 +39,8 @@ def desenhar_figuras():
     for fig, values in figuras:
         if fig == "linha":
             canvas.create_line(values[0], values[1], values[2], values[3])
+        elif fig == "oval":
+            canvas.create_oval(values[0], values[1], values[2], values[3], outline="black")
         else: # fig == "rabisco"
             canvas.create_line(values)
 
@@ -46,12 +50,14 @@ def desenhar_figura_nova():
     fig, values = figura_nova
     if fig == "linha":
         canvas.create_line(values[0], values[1], values[2], values[3], dash=(4, 2))
+    elif fig == "oval":
+        canvas.create_oval(values[0], values[1], values[2], values[3], dash=(4, 2), outline="black")
     else: # fig == "rabisco"
         canvas.create_line(values, dash=(4, 2))
 
 def incompleta(figura):
     fig, values = figura
-    if fig == "linha":
+    if fig == ["linha", "oval"]:
         return (values[0], values[1]) == (values[2], values[3])
     else: # fig == "rabisco"
         return len(values) <= 1
@@ -71,9 +77,9 @@ paddings = {'padx': 5, 'pady': 5}
 label = ttk.Label(frame, text='Escolha se vai desenhar linha ou Rabisco:')
 label.grid(column=0, row=0, sticky=W, **paddings)
 
-# option menu (CORRIGIDO: Removido o 'Linha' duplicado)
+# option menu 
 tipo_figura_var = StringVar(root)
-option_menu = ttk.OptionMenu(frame, tipo_figura_var, 'Linha', 'Rabisco')
+option_menu = ttk.OptionMenu(frame, tipo_figura_var,'Linha', 'Linha', 'Rabisco', 'oval')
 option_menu.grid(column=1, row=0, sticky=W, **paddings)
 
 # Área de desenho
