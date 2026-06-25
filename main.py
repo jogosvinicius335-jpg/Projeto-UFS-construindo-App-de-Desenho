@@ -12,6 +12,8 @@ def iniciar_figura_nova(event):
         figura_nova = ("Oval", (event.x, event.y, event.x, event.y))
     elif tipo_figura_var.get() == 'Retangulo':
          figura_nova = ("Retangulo", (event.x, event.y, event.x, event.y))
+    elif tipo_figura_var.get() == 'Circulo': ###
+        figura_nova = ("Circulo", (event.x, event.y, event.x, event.y))####
     else:
         figura_nova = ("Rabisco", [(event.x, event.y)])
 
@@ -29,6 +31,8 @@ def atualizar_figura_nova(event):
         figura_nova = ('Retangulo', (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
     elif figura_nova[0] == "Oval":
         figura_nova = ("Oval", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
+    elif figura_nova[0] == "Circulo":
+        figura_nova = ("Circulo", (figura_nova[1][0], figura_nova[1][1], event.x, event.y))
     
     desenhar_figuras()
     desenhar_figura_nova()
@@ -51,6 +55,17 @@ def desenhar_figuras():
             canvas.create_oval(values[0], values[1], values[2], values[3], outline=cor_borda.get(), fill=cor_preenchimento.get())
         elif fig == "Retangulo":
             canvas.create_rectangle(values[0], values[1], values[2], values[3], outline=cor_borda.get(), fill=cor_preenchimento.get())
+        elif fig == "Circulo":
+            x1, y1, x2, y2 = values
+            x1, x2 = min(x1, x2), max(x1, x2)
+            y1, y2 = min(y1, y2), max(y1, y2)
+            largura = x2 - x1
+            altura = y2 - y1
+            lado = min(largura, altura)
+            centrox = (x1 + x2) // 2
+            centroy = (y1 + y2) // 2
+            raio = lado // 2
+            canvas.create_oval(centrox - raio, centroy - raio, centrox + raio, centroy + raio, outline = "black") #fórmula do circ. 
         else: # fig == "rabisco"
             canvas.create_line(values, fill=cor_preenchimento.get())
 
@@ -64,12 +79,24 @@ def desenhar_figura_nova():
         canvas.create_oval(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor_borda.get(), fill=cor_preenchimento.get())
     elif fig == "Retangulo":
             canvas.create_rectangle(values[0], values[1], values[2], values[3], dash=(4, 2), outline=cor_borda.get(), fill=cor_preenchimento.get())
+    elif fig == "Circulo":
+        x1, y1, x2, y2 = values
+        x1, x2 = min(x1, x2), max(x1, x2)
+        y1, y2 = min(y1, y2), max(y1, y2)
+        largura = x2 - x1
+        altura = y2 - y1
+        lado = min(largura, altura)
+        centrox = (x1 + x2) // 2
+        centroy = (y1 + y2) // 2
+        raio = lado // 2
+        canvas.create_oval(centrox - raio, centroy - raio, centrox + raio, centroy + raio,
+                       dash=(4, 2), outline="black")
     else: # fig == "rabisco"
         canvas.create_line(values, dash=(4, 2), fill=cor_preenchimento.get())
 
 def incompleta(figura):
     fig, values = figura
-    if fig in ["Linha", "Oval"]:
+    if fig in ["Linha", "Oval", "Circulo"]:
         return (values[0], values[1]) == (values[2], values[3])
     elif fig == "Rabisco":
         return len(values) <= 1
