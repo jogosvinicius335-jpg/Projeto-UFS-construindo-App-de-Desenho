@@ -15,9 +15,43 @@ class Figura(ABC):
     def esta_incompleta(self):
         return (self.x1, self.y1) == (self.x2, self.y2)
 
+    def _opcoes_desenho(self, tracejado=False):
+        # Coloque aqui Danilo sua parte
+        pass
+
 
 class FiguraPreenchida(Figura):
-    pass
+    def __init__(self, x1, y1, x2, y2, cor_borda, cor_preenchimento):
+        # Coloque aqui Danilo sua parte
+        pass
+
+    def _opcoes_desenho(self, tracejado=False):
+        # Coloque aqui Danilo sua parte
+        pass
+
+
+class Linha(Figura):
+    def desenhar(self, canvas, tracejado=False):
+        # Coloque aqui Danilo sua parte
+        pass
+
+
+class Rabisco(Figura):
+    def __init__(self, x, y, cor_borda):
+        # Coloque aqui Danilo sua parte
+        pass
+
+    def atualizar(self, x, y):
+        # Coloque aqui Danilo sua parte
+        pass
+
+    def esta_incompleta(self):
+        # Coloque aqui Danilo sua parte
+        pass
+
+    def desenhar(self, canvas, tracejado=False):
+        # Coloque aqui Danilo sua parte
+        pass
 
 
 class Retangulo(FiguraPreenchida):
@@ -35,20 +69,3 @@ class Oval(FiguraPreenchida):
             **self._opcoes_desenho(tracejado)
         )
 
-
-class Circulo(FiguraPreenchida):
-    def desenhar(self, canvas, tracejado=False):
-        x1, x2 = min(self.x1, self.x2), max(self.x1, self.x2)
-        y1, y2 = min(self.y1, self.y2), max(self.y1, self.y2)
-        largura = x2 - x1
-        altura = y2 - y1
-        lado = min(largura, altura)
-        centrox = (x1 + x2) // 2
-        centroy = (y1 + y2) // 2
-        raio = lado // 2
-
-        canvas.create_oval(
-            centrox - raio, centroy - raio,
-            centrox + raio, centroy + raio,
-            **self._opcoes_desenho(tracejado)
-        )
