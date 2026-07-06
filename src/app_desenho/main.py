@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import colorchooser
 
-from figuras import Linha, Rabisco, Retangulo, Oval, Circulo, Poligono
+from src.figuras import Linha, Rabisco, Retangulo, Oval, Circulo, Poligono
 
 CLASSES_FIGURA = {
     'Linha': Linha,
